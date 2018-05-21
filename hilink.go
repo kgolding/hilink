@@ -76,7 +76,7 @@ func NewClient(opts ...Option) (*Client, error) {
 
 	// login
 	if c.login != "" {
-		// retrieve session id
+		// retrieve session id to use for the login post
 		sessID, tokID, err := c.NewSessionAndTokenID()
 		if err != nil {
 			return nil, err
@@ -88,12 +88,10 @@ func NewClient(opts ...Option) (*Client, error) {
 			"Password", CreateLoginPassword(tokID, c.login, c.password),
 			"password_type", "4",
 		)
-		fmt.Println(xml)
-		res, err := c.doReq("api/user/login", xml, false)
+		_, err = c.doReq("api/user/login", xml, false)
 		if err != nil {
 			return nil, err
 		}
-		fmt.Println("RES: ", res)
 	}
 
 	// start session
@@ -884,29 +882,25 @@ func (c *Client) UpnpSet(enabled bool) (bool, error) {
 // firewall ("security") configuration
 // wifi profile management
 
+// Create a "type 4 password" from a given token/login.password
 func CreateLoginPassword(tokID, login, password string) string {
-	fmt.Printf("tokID: %s\nlogin: %s\npassword: %s\n", tokID, login, password)
 	X1 := fmt.Sprintf("%x", sha256.Sum256([]byte(password)))
-	fmt.Printf("X1: %s\n", X1)
 
 	X2b := make([]byte, base64.StdEncoding.EncodedLen(len(X1)))
 	base64.StdEncoding.Encode(X2b, []byte(X1))
 	X2 := string(X2b)
-	fmt.Printf("X2: %s\n", X2)
 
 	X3 := login + X2 + tokID
-	fmt.Printf("X3: %s\n", X3)
 
 	X4 := fmt.Sprintf("%x", sha256.Sum256([]byte(X3)))
-	fmt.Printf("X4: %s\n", X4)
 
 	X5b := make([]byte, base64.StdEncoding.EncodedLen(len(X4)))
 	base64.StdEncoding.Encode(X5b, []byte(X4))
 	X5 := string(X5b)
-	fmt.Printf("X5: %s\n", X5)
 
 	return X5
-	// PHP Reference code:
+	// PHP Reference code (ported from)
+	// source https://github.com/HSPDev/Huawei-E5180-API/blob/master/src/HSPDev/HuaweiApi/Router.php#L315
 	//<?php
 	//$username = "admin";
 	//$password = "admin";

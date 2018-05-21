@@ -17,8 +17,9 @@ var (
 	flagMsg      = flag.String("msg", "", "message")
 	flagList     = flag.Bool("list", false, "list sms messages in inbox")
 	flagCount    = flag.Uint("c", 50, "message count for -list")
-	flagLogin    = flag.String("login", "", "admin")
-	flagPass     = flag.String("pass", "", "admin")
+	flagNoLogin  = flag.Bool("nologin", false, "do not try to login")
+	flagLogin    = flag.String("login", "admin", "admin")
+	flagPass     = flag.String("pass", "admin", "admin")
 )
 
 func main() {
@@ -34,7 +35,7 @@ func main() {
 		opts = append(opts, hilink.Log(log.Printf, log.Printf))
 	}
 
-	if *flagLogin != "" {
+	if !*flagNoLogin {
 		opts = append(opts, hilink.Login(*flagLogin, *flagPass))
 	}
 
