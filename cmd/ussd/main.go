@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/knq/hilink"
+	"github.com/kgolding/hilink"
 )
 
 var (

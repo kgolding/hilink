@@ -10,6 +10,15 @@ import (
 // Option is an option used when creating a new Client.
 type Option func(*Client) error
 
+// Login.
+func Login(login, password string) Option {
+	return func(c *Client) error {
+		c.login = login
+		c.password = password
+		return nil
+	}
+}
+
 // URL is an option that handles setting the URL on the Client.
 func URL(rawurl string) Option {
 	return func(c *Client) error {
@@ -56,6 +65,9 @@ func (hl *httpLogger) RoundTrip(req *http.Request) (*http.Response, error) {
 
 	reqBody, _ := httputil.DumpRequestOut(req, true)
 	res, err := trans.RoundTrip(req)
+	if err != nil {
+		return nil, err
+	}
 	resBody, _ := httputil.DumpResponse(res, true)
 
 	hl.requestLogf("%s", reqBody)

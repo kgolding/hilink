@@ -7,16 +7,18 @@ import (
 	"log"
 	"os"
 
-	"github.com/knq/hilink"
+	"github.com/kgolding/hilink"
 )
 
 var (
-	flagEndpoint = flag.String("endpoint", "http://192.168.8.1/", "api endpoint")
+	flagEndpoint = flag.String("endpoint", "http://192.168.1.1/", "api endpoint")
 	flagDebug    = flag.Bool("v", false, "enable verbose")
 	flagTo       = flag.String("to", "", "to")
 	flagMsg      = flag.String("msg", "", "message")
 	flagList     = flag.Bool("list", false, "list sms messages in inbox")
 	flagCount    = flag.Uint("c", 50, "message count for -list")
+	flagLogin    = flag.String("login", "", "admin")
+	flagPass     = flag.String("pass", "", "admin")
 )
 
 func main() {
@@ -30,6 +32,10 @@ func main() {
 	}
 	if *flagDebug {
 		opts = append(opts, hilink.Log(log.Printf, log.Printf))
+	}
+
+	if *flagLogin != "" {
+		opts = append(opts, hilink.Login(*flagLogin, *flagPass))
 	}
 
 	// create client

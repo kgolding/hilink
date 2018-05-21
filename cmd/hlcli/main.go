@@ -12,7 +12,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/knq/hilink"
+	"github.com/kgolding/hilink"
 )
 
 func doExit(msg string, args ...interface{}) {
@@ -100,7 +100,7 @@ Where <method> is one of the following:
 		}
 	}
 
-	fmt.Fprintln(os.Stdout, ` 
+	fmt.Fprintln(os.Stdout, `
 Note that method names are case-insensitive.
 
 For help regarding the available parameters for a method:
